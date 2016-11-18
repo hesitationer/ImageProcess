@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/image_processing">
+        <file>Resources/rotation.png</file>
+        <file>Resources/brightness.png</file>
+        <file>Resources/saturation.PNG</file>
+        <file>Resources/tone.PNG</file>
+    </qresource>
+    <qresource prefix="/Images">
+        <file>Resources/rotation.png</file>
+        <file>Resources/cut.png</file>
+        <file>Resources/filter.PNG</file>
+    </qresource>
+</RCC>
