@@ -27,6 +27,8 @@ Main_window::Main_window(QWidget *parent)
 	gaussianBlurWidget = new QWidget(this);
 	sharpenWidget = new QWidget(this);
 	filterWidget = new QWidget(this);
+	frequencyBlurWidget = new QWidget(this);
+	frequencySharpenWidget = new QWidget(this);
 
 	createActionInLight();
 	createActionInSaturation();
@@ -40,6 +42,8 @@ Main_window::Main_window(QWidget *parent)
 	createActionInGaussianBlur();
 	createActionInSharpen();
 	createActionInFilter();
+	createActionInFrequencyBlur();
+	createActionInFrequencySharpen();
 
 	imgBox = new QGroupBox();
 	QHBoxLayout *imgBoxLayout = new QHBoxLayout;
@@ -62,6 +66,8 @@ Main_window::Main_window(QWidget *parent)
 	layout->addWidget(gaussianBlurWidget);
 	layout->addWidget(sharpenWidget);
 	layout->addWidget(filterWidget);
+	layout->addWidget(frequencyBlurWidget);
+	layout->addWidget(frequencySharpenWidget);
 	layout->addWidget(imgBox);
 	this->setLayout(layout);
 	hideToolBar();
@@ -518,7 +524,7 @@ void Main_window::createActionInFilter()
 	pencilDrawingFilterButton = new QPushButton(tr("Penicl Drawing"), this);
 	connect(pencilDrawingFilterButton, &QPushButton::clicked, this, &Main_window::clickPencilDrawingFilterButton);
 
-	latticeFilterButton = new QPushButton(tr("Lattice"), this);
+	latticeFilterButton = new QPushButton(tr("Film"), this);
 	connect(latticeFilterButton, &QPushButton::clicked, this, &Main_window::clickLatticeFilterButton);
 
 	filterGroupBox = new QGroupBox(tr("Filter"));
@@ -533,6 +539,67 @@ void Main_window::createActionInFilter()
 	QHBoxLayout *layout = new QHBoxLayout;
 	layout->addWidget(filterGroupBox);
 	filterWidget->setLayout(layout);
+}
+
+void Main_window::createActionInFrequencyBlur(){
+	frequencyBlurOK = new QPushButton(tr("Ok"), this);
+	connect(frequencyBlurOK, &QPushButton::clicked, this, &Main_window::clickFrequencyBlurOK);
+
+	frequencyBlurD0Label = new QLabel(tr("D0"));
+	frequencyBlurD0Lineedit = new QLineEdit;
+	frequencyBlurD0Lineedit->setAlignment(Qt::AlignCenter);
+
+	frequencyBlurNlabel = new QLabel(tr("n"));
+	frequencyBlurNLineedit = new QLineEdit;
+	frequencyBlurNLineedit->setAlignment(Qt::AlignCenter);
+
+	frequencyBlurBox = new QGroupBox(tr("Frequency Blur"));
+	frequencyBlurBox->setFixedHeight(100);
+	QHBoxLayout *layout = new QHBoxLayout;
+	layout->addWidget(frequencyBlurD0Label);
+	layout->addWidget(frequencyBlurD0Lineedit);
+	layout->addWidget(frequencyBlurNlabel);
+	layout->addWidget(frequencyBlurNLineedit);
+	layout->addWidget(frequencyBlurOK);
+	frequencyBlurBox->setLayout(layout);
+
+	QHBoxLayout *layout2 = new QHBoxLayout;
+	layout2->addWidget(frequencyBlurBox);
+	frequencyBlurWidget->setLayout(layout2);
+}
+
+void Main_window::createActionInFrequencySharpen(){
+	frequencySharpenOK = new QPushButton(tr("Ok"), this);
+	connect(frequencySharpenOK, &QPushButton::clicked, this, &Main_window::clickFrequencySharpenOK);
+
+
+	frequencySharpenD0Label = new QLabel(tr("D0"));
+	frequencySharpenD0Lineedit = new QLineEdit;
+	frequencySharpenD0Lineedit->setAlignment(Qt::AlignCenter);
+
+	frequencySharpenNlabel = new QLabel(tr("n"));
+	frequencySharpenNLineedit = new QLineEdit;
+	frequencySharpenNLineedit->setAlignment(Qt::AlignCenter);
+
+	frequencySharpenALabel = new QLabel(tr("A"));
+	frequencySharpenALineedit = new QLineEdit;
+	frequencySharpenALineedit->setAlignment(Qt::AlignCenter);
+
+	frequencySharpenBox = new QGroupBox(tr("Frequency Sharpen"));
+	frequencySharpenBox->setFixedHeight(100);
+	QHBoxLayout *layout = new QHBoxLayout;
+	layout->addWidget(frequencySharpenD0Label);
+	layout->addWidget(frequencySharpenD0Lineedit);
+	layout->addWidget(frequencySharpenNlabel);
+	layout->addWidget(frequencySharpenNLineedit);
+	layout->addWidget(frequencySharpenALabel);
+	layout->addWidget(frequencySharpenALineedit);
+	layout->addWidget(frequencySharpenOK);
+	frequencySharpenBox->setLayout(layout);
+
+	QHBoxLayout *layout2 = new QHBoxLayout;
+	layout2->addWidget(frequencySharpenBox);
+	frequencySharpenWidget->setLayout(layout2);
 }
 
 void Main_window::showRotation()
@@ -617,6 +684,16 @@ void Main_window::showFilter()
 {
 	hideToolBar();
 	filterWidget->show();
+}
+
+void Main_window::showFrequencyBlur(){
+	hideToolBar();
+	frequencyBlurWidget->show();
+}
+
+void Main_window::showFrequencySharpen(){
+	hideToolBar();
+	frequencySharpenWidget->show();
 }
 void Main_window::clickFlipHorizontal()
 {
@@ -805,6 +882,8 @@ void Main_window::hideToolBar()
 	gaussianBlurWidget->hide();
 	sharpenWidget->hide();
 	filterWidget->hide();
+	frequencyBlurWidget->hide();
+	frequencySharpenWidget->hide();
 }
 
 void Main_window::cutRect(int x, int y, int w, int h)
@@ -1530,10 +1609,85 @@ void Main_window::clickPencilDrawingFilterButton()
 
 	img = oldImg.clone();
 	filter.pencilDrawing(img);
-	drawImages(img);
+	QImage imdisplay((uchar*)img.data, img.cols, img.rows, img.step, QImage::Format_Grayscale8);
+	QPixmap pix = QPixmap::fromImage(imdisplay);
+	showImageLabel->setPixmap(pix);
 }
 
 void Main_window::clickLatticeFilterButton()
 {
+	if (!checkImage())
+	{
+		return;
+	}
 
+	img = oldImg.clone();
+	filter.film(img);
+	drawImages(img);
+}
+
+
+void Main_window::clickFrequencyBlurOK(){
+	if (!checkImage())
+	{
+		return;
+	}
+
+	QString nStr = frequencyBlurNLineedit->text();
+	QString d0Str = frequencyBlurD0Lineedit->text();
+	if (nStr.isNull() || nStr.isEmpty() || d0Str.isNull() || d0Str.isEmpty())
+	{
+		QMessageBox::information(this, tr("tips"), tr("please input the parm"));
+		return;
+	}
+
+	bool nOK, d0Ok;
+	int n = nStr.toInt(&nOK);
+	int d0 = d0Str.toInt(&d0Ok);
+	if (!nOK || !d0Ok)
+	{
+		QMessageBox::information(this, tr("tips"), tr("please input the correct parm"));
+		return;
+	}
+	
+	img = oldImg.clone();
+	frequencyFilter.blur(img, n, d0);
+
+
+	drawImages(img);
+	QMessageBox::information(this, tr("tips"), tr("blur ok"));
+
+}
+
+void Main_window::clickFrequencySharpenOK(){
+	if (!checkImage())
+	{
+		return;
+	}
+
+	QString nStr = frequencySharpenNLineedit->text();
+	QString d0Str = frequencySharpenD0Lineedit->text();
+	QString aStr = frequencySharpenALineedit->text();
+	if (nStr.isNull() || nStr.isEmpty() || d0Str.isNull() || d0Str.isEmpty() || aStr.isNull() || aStr.isEmpty())
+	{
+		QMessageBox::information(this, tr("tips"), tr("please input the parm"));
+		return;
+	}
+
+	bool nOK, d0Ok, aOk;
+	int n = nStr.toInt(&nOK);
+	int d0 = d0Str.toInt(&d0Ok);
+	float a = aStr.toFloat(&aOk);
+	if (!nOK || !d0Ok || !aOk)
+	{
+		QMessageBox::information(this, tr("tips"), tr("please input the correct parm"));
+		return;
+	}
+
+	img = oldImg.clone();
+	frequencyFilter.sharpen(img, n, d0, a);
+
+
+	drawImages(img);
+	QMessageBox::information(this, tr("tips"), tr("sharpen ok"));
 }

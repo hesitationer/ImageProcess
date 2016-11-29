@@ -120,7 +120,7 @@ void Image_processing::createActions()
 	frequencySharpenAct = new QAction(tr("Sharpen"), this);
 	connect(frequencySharpenAct, &QAction::triggered, this, &Image_processing::frequencySharpen);
 
-	frequencySmoothAct = new QAction(tr("Smooth"), this);
+	frequencySmoothAct = new QAction(tr("Blur"), this);
 	connect(frequencySmoothAct, &QAction::triggered, this, &Image_processing::frequencySmooth);
 
 	const QIcon filterIcon = QIcon::fromTheme("document-new", QIcon(":/Images/Resources/filter.PNG"));
@@ -315,12 +315,12 @@ void Image_processing::sharpen()
 
 void Image_processing::frequencySharpen()
 {
-
+	window->showFrequencySharpen();
 }
 
 void Image_processing::frequencySmooth()
 {
-
+	window->showFrequencyBlur();
 }
 
 void Image_processing::filter()

@@ -11,6 +11,7 @@ public:
 	void lomo(Mat &img, Mat overlay);
 	void grayscaleRelief(Mat &img);
 	void pencilDrawing(Mat &img);
+	void film(Mat &img);
 private:
 	ImageEnhancement imageEnhancement;
 	Hsi hsi;

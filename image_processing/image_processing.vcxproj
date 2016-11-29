@@ -141,6 +141,7 @@
     <ClCompile Include="common.cpp" />
     <ClCompile Include="cut_image.cpp" />
     <ClCompile Include="filter.cpp" />
+    <ClCompile Include="FrequencyFilter.cpp" />
     <ClCompile Include="hsi.cpp" />
     <ClCompile Include="image_enhancement.cpp" />
     <ClCompile Include="image_label.cpp" />
@@ -466,6 +467,7 @@
   <ItemGroup>
     <ClInclude Include="bgr_histogram.h" />
     <ClInclude Include="filter.h" />
+    <ClInclude Include="frequency_filter.h" />
     <ClInclude Include="spatial_filter.h" />
     <ClInclude Include="template_size_dialog.h" />
   </ItemGroup>

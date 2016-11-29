@@ -20,6 +20,7 @@
 #include "template_size_dialog.h"
 #include "spatial_filter.h"
 #include "filter.h"
+#include "frequency_filter.h"
 class Main_window : public QWidget
 {
 	Q_OBJECT
@@ -84,6 +85,13 @@ public:
 	void createActionInFilter();
 	void showFilter();
 
+	//ÆµÓòÂË²¨
+	void createActionInFrequencyBlur();
+	void createActionInFrequencySharpen();
+	void showFrequencyBlur();
+	void showFrequencySharpen();
+
+
 	Mat img;
 	Mat oldImg;
 	Mat selectImg;
@@ -104,11 +112,35 @@ private:
 	QWidget *histSpecWidget;
 	QWidget *filterWidget;
 
+	//ÆµÓòÂË²¨
+	
+	QWidget *frequencyBlurWidget;
+	QWidget *frequencySharpenWidget;
+
+
 
 	//¿ÕÓòÂË²¨
 	QWidget *medianFilterWidget;
 	QWidget *gaussianBlurWidget;
 	QWidget *sharpenWidget;
+
+	//action in frequencyBlur
+	QGroupBox *frequencyBlurBox;
+	QPushButton *frequencyBlurOK;
+	QLabel *frequencyBlurD0Label;
+	QLineEdit *frequencyBlurD0Lineedit;
+	QLabel *frequencyBlurNlabel;
+	QLineEdit *frequencyBlurNLineedit;
+
+	//action in frequencySharpen
+	QGroupBox *frequencySharpenBox;
+	QPushButton *frequencySharpenOK;
+	QLabel *frequencySharpenD0Label;
+	QLineEdit *frequencySharpenD0Lineedit;
+	QLabel *frequencySharpenNlabel;
+	QLineEdit *frequencySharpenNLineedit;
+	QLabel *frequencySharpenALabel;
+	QLineEdit *frequencySharpenALineedit;
 
 	//action in rotationWidget
 	QLabel *angleLabel;
@@ -233,6 +265,7 @@ private:
 	ImageEnhancement imageEnhancement;
 	SpatialFilter spatialFilter;
 	Filter filter;
+	FrequencyFilter frequencyFilter;
 
 private slots:
 	//Ðý×ª
@@ -280,6 +313,8 @@ private slots:
 	void clickColorReliefFilterButton();
 	void clickPencilDrawingFilterButton();
 	void clickLatticeFilterButton();
+	void clickFrequencyBlurOK();
+	void clickFrequencySharpenOK();
 };
 
 #endif
